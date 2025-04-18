@@ -1,0 +1,53 @@
+{
+  "name": "@biggidea/flowflare",
+  "version": "1.0.0",
+  "description": "Workflow tracking system for Cloudflare Workers with D1 and Durable Objects",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "setup": "node ./bin/setup.js",
+    "test": "jest"
+  },
+  "bin": {
+    "flowflare-setup": "./bin/setup.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "workflow",
+    "durable-objects",
+    "d1"
+  ],
+  "author": "biggidea.com",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240411.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "chalk": "^4.1.2",
+    "commander": "^10.0.0",
+    "inquirer": "^8.2.5"
+  },
+  "peerDependencies": {
+    "@cloudflare/workers-types": ">=4.0.0",
+    "wrangler": ">=3.0.0"
+  }
+}

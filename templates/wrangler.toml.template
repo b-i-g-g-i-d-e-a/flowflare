@@ -1,0 +1,38 @@
+# templates/wrangler.toml.template
+name = "{{name}}"
+main = "src/index.js"
+compatibility_date = "2023-10-25"
+
+# D1 database for workflow tracking
+[[d1_databases]]
+binding = "DB"
+database_name = "{{database_name}}"
+database_id = "{{database_id}}"
+
+# Durable Object for real-time updates
+[durable_objects]
+bindings = [
+  { name = "WORKFLOW_TRACKER", class_name = "WorkflowTracker" }
+]
+
+[[migrations]]
+tag = "flowflare-v1"
+new_classes = ["WorkflowTracker"]
+
+# API key for service-to-service authentication
+[vars]
+SERVICE_API_KEY = "{{api_key}}"
+
+# Example workflow bindings
+# Uncomment and customize as needed
+# [[workflows]]
+# binding = "ORDER_PROCESSING"
+# entry_point = "OrderProcessingWorkflow"
+#
+# [[workflows]]
+# binding = "DNS_REGISTRATION"
+# entry_point = "DnsRegistrationWorkflow"
+
+# Enable WebSocket support
+[triggers]
+crons = []
