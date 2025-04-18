@@ -87,7 +87,7 @@ export async function updateWorkflowRun(
   instanceData: any,
   env: any,
 ): Promise<boolean> {
-  return sendTrackerUpdate("instance_update", instanceData, env);
+  return sendTrackerUpdate("run_update", instanceData, env);
 }
 
 /**
@@ -162,7 +162,9 @@ export async function trackStep(
     };
 
     const updateResult = await updateWorkflowStep(stepStartData, env);
-    stepId = updateResult?.id;
+    if (updateResult && typeof updateResult === 'object') {
+      stepId = (updateResult as { id?: string }).id;
+    }
   } catch (error) {
     console.error(
       `Failed to record step start: ${error instanceof Error ? error.message : "Unknown error"}`,

@@ -4,8 +4,9 @@ import { WorkflowTracker } from "./service/tracker";
 import { WorkflowClient } from "./client";
 import {
   trackStep,
-  updateWorkflowInstance,
-  recordStepRetry,
+  updateWorkflowRun,
+  updateWorkflowStep,
+  recordWorkflowStepRetry,
 } from "./workflow/integration";
 
 // Export all components
@@ -21,8 +22,13 @@ export {
 
   // Workflow utilities
   trackStep,
-  updateWorkflowInstance,
-  recordStepRetry,
+  updateWorkflowRun,
+  updateWorkflowStep,
+  recordWorkflowStepRetry,
+  
+  // For backward compatibility
+  updateWorkflowRun as updateWorkflowInstance,
+  recordWorkflowStepRetry as recordStepRetry,
 };
 
 // Default export for convenience
@@ -30,4 +36,9 @@ export default {
   createWorkflowService,
   WorkflowTracker,
   WorkflowClient,
+  trackStep,
+  updateWorkflowRun,
+  updateWorkflowInstance: updateWorkflowRun,
+  recordWorkflowStepRetry,
+  recordStepRetry: recordWorkflowStepRetry,
 };

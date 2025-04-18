@@ -29,15 +29,17 @@ export default {
     const corsHeaders = (request: Request): HeadersInit => {
       const origin = request.headers.get("Origin");
       // Check if origin is allowed
+      const allowedOrigins = config.allowedOrigins || ["*"];
+      
       const allowOrigin =
-        origin && config.allowedOrigins.includes("*")
+        origin && allowedOrigins.includes("*")
           ? origin
-          : config.allowedOrigins.includes(origin || "")
+          : allowedOrigins.includes(origin || "")
             ? origin
-            : config.allowedOrigins[0] || "*";
+            : allowedOrigins[0] || "*";
 
       return {
-        "Access-Control-Allow-Origin": allowOrigin,
+        "Access-Control-Allow-Origin": allowOrigin || "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers":
           "Content-Type, Authorization, X-API-Key",
@@ -264,7 +266,14 @@ export default {
     corsHeaders: HeadersInit,
   ): Promise<Response> {
     try {
-      const { workflowType, params, ref_id, ref_type, metadata } = await request.json();
+      const requestData = await request.json() as {
+        workflowType: string;
+        params: Record<string, any>;
+        ref_id?: string;
+        ref_type?: string;
+        metadata?: Record<string, any>;
+      };
+      const { workflowType, params, ref_id, ref_type, metadata } = requestData;
 
       // Generate a unique ID for this workflow instance
       const instanceId = crypto.randomUUID();
@@ -298,7 +307,7 @@ export default {
           .bind(
             "Running", 
             instanceId, 
-            (existingWorkflow.runs_count || 0) + 1,
+            ((existingWorkflow.runs_count as number) || 0) + 1,
             workflowId
           )
           .run();
@@ -423,7 +432,10 @@ export default {
     corsHeaders: HeadersInit,
   ): Promise<Response> {
     try {
-      const { workflowId } = await request.json();
+      const requestData = await request.json() as {
+        workflowId: string;
+      };
+      const { workflowId } = requestData;
 
       // Get workflow tracker Durable Object
       const id = env.WORKFLOW_TRACKER.idFromName("default");
@@ -441,12 +453,12 @@ export default {
         }),
       );
 
-      const data = await response.json();
+      const responseData = await response.json() as { data?: any[] };
 
       return new Response(
         JSON.stringify({
           success: true,
-          workflow: data.data?.[0] || null,
+          workflow: responseData.data?.[0] || null,
         }),
         {
           headers: {
@@ -481,7 +493,12 @@ export default {
     corsHeaders: HeadersInit,
   ): Promise<Response> {
     try {
-      const { status, limit, offset } = await request.json();
+      const requestData = await request.json() as {
+        status?: string;
+        limit?: number;
+        offset?: number;
+      };
+      const { status, limit, offset } = requestData;
 
       // Get workflow tracker Durable Object
       const id = env.WORKFLOW_TRACKER.idFromName("default");
@@ -499,12 +516,12 @@ export default {
         }),
       );
 
-      const data = await response.json();
+      const responseData = await response.json() as { data?: any[] };
 
       return new Response(
         JSON.stringify({
           success: true,
-          workflows: data.data || [],
+          workflows: responseData.data || [],
         }),
         {
           headers: {
@@ -539,7 +556,14 @@ export default {
     corsHeaders: HeadersInit,
   ): Promise<Response> {
     try {
-      const { ref_id, ref_type, status, limit, offset } = await request.json();
+      const requestData = await request.json() as {
+        ref_id?: string;
+        ref_type?: string;
+        status?: string;
+        limit?: number;
+        offset?: number;
+      };
+      const { ref_id, ref_type, status, limit, offset } = requestData;
 
       if (!ref_id && !ref_type) {
         return new Response(
@@ -579,12 +603,12 @@ export default {
         }),
       );
 
-      const data = await response.json();
+      const responseData = await response.json() as { data?: any[] };
 
       return new Response(
         JSON.stringify({
           success: true,
-          workflows: data.data || [],
+          workflows: responseData.data || [],
         }),
         {
           headers: {
