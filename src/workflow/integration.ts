@@ -153,7 +153,7 @@ export async function trackStep(
   let stepId;
   try {
     const stepStartData = {
-      workflow_instance_id: workflowInstanceId,
+      workflow_run_id: workflowInstanceId,
       step_name: stepName,
       status: "Running",
       step_index: stepIndex,
@@ -179,7 +179,7 @@ export async function trackStep(
     // Update step as completed
     const stepCompleteData = {
       id: stepId, // Include step ID if we have it
-      workflow_instance_id: workflowInstanceId,
+      workflow_run_id: workflowInstanceId,
       step_name: stepName,
       status: "Completed",
       step_index: stepIndex,
@@ -212,7 +212,7 @@ export async function trackStep(
     // Update step status with failure information
     const stepFailedData = {
       id: stepId,
-      workflow_instance_id: workflowInstanceId,
+      workflow_run_id: workflowInstanceId,
       step_name: stepName,
       status: isRetryable ? "Retrying" : "Failed",
       step_index: stepIndex,

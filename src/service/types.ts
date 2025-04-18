@@ -43,16 +43,17 @@ export interface Env {
 }
 
 /**
- * Structure of workflow instance data
+ * Structure of workflow run data
  */
-export interface WorkflowInstance {
+export interface WorkflowRun {
   id: string;
-  workflow_definition_id: number;
+  workflow_id: number;
   status: WorkflowStatus;
   ref_id?: string;
   ref_type?: string;
   input_params: string;
   output_result: string;
+  metadata?: string;
   created_at: string;
   updated_at: string;
   completed_at?: string;
@@ -64,20 +65,20 @@ export interface WorkflowInstance {
  */
 export interface WorkflowStep {
   id?: number;
-  workflow_instance_id: string;
+  workflow_run_id: string;
   step_name: string;
   status: StepStatus;
   step_index: number;
   state?: string;
   started_at?: string;
   completed_at?: string;
-  retries?: StepRetry[];
+  retries?: WorkflowStepRetry[];
 }
 
 /**
- * Structure of step retry data
+ * Structure of workflow step retry data
  */
-export interface StepRetry {
+export interface WorkflowStepRetry {
   id?: number;
   workflow_step_id: number;
   retry_count: number;

@@ -59,7 +59,7 @@ export { WorkflowTracker } from '@biggidea/flowflare';
 // src/workflows/email-workflow.js
 import {
   trackStep,
-  updateWorkflowInstance
+  updateWorkflowRun
 } from '@biggidea/flowflare/workflow';
 
 export class EmailCampaignWorkflow extends WorkflowEntrypoint {
@@ -67,14 +67,15 @@ export class EmailCampaignWorkflow extends WorkflowEntrypoint {
     // Extract ref_id and ref_type from payload
     const { ref_id, ref_type, recipients, subject, body } = event.payload;
 
-    // Initialize workflow
-    await updateWorkflowInstance({
+    // Initialize workflow run
+    await updateWorkflowRun({
       id: step.instanceId,
-      workflow_definition_id: 1,
+      workflow_id: 1,
       status: 'Running',
       ref_id,
       ref_type,
-      input_params: JSON.stringify(event.payload)
+      input_params: JSON.stringify(event.payload),
+      metadata: JSON.stringify({ source: 'email-workflow' })
     }, this.env);
 
     try {
@@ -108,7 +109,7 @@ export class EmailCampaignWorkflow extends WorkflowEntrypoint {
 
       // Mark workflow as completed
       const finalResult = { success: true, sent: sendResult.sent };
-      await updateWorkflowInstance({
+      await updateWorkflowRun({
         id: step.instanceId,
         status: 'Completed',
         completed_at: new Date().toISOString(),
@@ -118,7 +119,7 @@ export class EmailCampaignWorkflow extends WorkflowEntrypoint {
       return finalResult;
     } catch (error) {
       // Handle error
-      await updateWorkflowInstance({
+      await updateWorkflowRun({
         id: step.instanceId,
         status: 'Errored',
         output_result: JSON.stringify({
@@ -373,14 +374,15 @@ export class EmailCampaignWorkflow extends WorkflowEntrypoint {
     // Extract ref_id and ref_type from payload
     const { ref_id, ref_type, recipients, subject, body } = event.payload;
 
-    // Initialize workflow
-    await updateWorkflowInstance({
+    // Initialize workflow run
+    await updateWorkflowRun({
       id: step.instanceId,
-      workflow_definition_id: 1,
+      workflow_id: 1,
       status: 'Running',
       ref_id,
       ref_type,
-      input_params: JSON.stringify(event.payload)
+      input_params: JSON.stringify(event.payload),
+      metadata: JSON.stringify({ source: 'email-workflow' })
     }, this.env);
 
     try {
@@ -414,7 +416,7 @@ export class EmailCampaignWorkflow extends WorkflowEntrypoint {
 
       // Mark workflow as completed
       const finalResult = { success: true, sent: sendResult.sent };
-      await updateWorkflowInstance({
+      await updateWorkflowRun({
         id: step.instanceId,
         status: 'Completed',
         completed_at: new Date().toISOString(),
@@ -424,7 +426,7 @@ export class EmailCampaignWorkflow extends WorkflowEntrypoint {
       return finalResult;
     } catch (error) {
       // Handle error
-      await updateWorkflowInstance({
+      await updateWorkflowRun({
         id: step.instanceId,
         status: 'Errored',
         output_result: JSON.stringify({
